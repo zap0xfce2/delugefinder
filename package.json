@@ -4,7 +4,7 @@
   "description": "A sleek, zero-setup torrent finder and downloader that lives right in your terminal.",
   "type": "module",
   "bin": {
-    "torlnk": "./dist/index.js"
+    "torlnk": "./dist/cli.cjs"
   },
   "files": [
     "dist",
@@ -16,6 +16,7 @@
   "scripts": {
     "dev": "tsx src/index.tsx",
     "build": "tsup",
+    "postbuild": "cp scripts/cli-entry.cjs dist/cli.cjs && chmod +x dist/cli.cjs",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
