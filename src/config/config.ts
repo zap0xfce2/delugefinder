@@ -7,12 +7,19 @@ export interface DelugeConfig {
   password: string;
 }
 
+export interface ProwlarrConfig {
+  url: string;
+  apiKey: string;
+}
+
 export interface Config {
   deluge: DelugeConfig | null;
+  prowlarr: ProwlarrConfig | null;
 }
 
 export const defaultConfig: Config = {
   deluge: null,
+  prowlarr: null,
 };
 
 function parseDeluge(raw: unknown): DelugeConfig | null {
@@ -21,6 +28,14 @@ function parseDeluge(raw: unknown): DelugeConfig | null {
   if (typeof r.url !== "string" || !r.url) return null;
   if (typeof r.password !== "string") return null;
   return { url: r.url, password: r.password };
+}
+
+export function parseProwlarr(raw: unknown): ProwlarrConfig | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  if (typeof r.url !== "string" || !r.url) return null;
+  if (typeof r.apiKey !== "string" || !r.apiKey) return null;
+  return { url: r.url, apiKey: r.apiKey };
 }
 
 export async function loadConfig(): Promise<Config> {
@@ -32,7 +47,7 @@ export async function loadConfig(): Promise<Config> {
   }
   try {
     const parsed = JSON.parse(raw) as Partial<Config>;
-    return { deluge: parseDeluge(parsed.deluge) };
+    return { deluge: parseDeluge(parsed.deluge), prowlarr: parseProwlarr(parsed.prowlarr) };
   } catch {
     return { ...defaultConfig };
   }

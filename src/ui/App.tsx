@@ -1,9 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Box, Text, useApp, useInput, useStdout, useStdin } from "ink";
-import { loadConfig, saveConfig, type Config, type DelugeConfig } from "../config/config";
+import {
+  loadConfig,
+  saveConfig,
+  type Config,
+  type DelugeConfig,
+  type ProwlarrConfig,
+} from "../config/config";
 import { sendMagnet } from "../deluge/client";
 import { parseInput } from "../sources/magnet";
 import { magnetFromTorrentFile } from "../sources/torrentFile";
+import { buildProwlarrSources } from "../sources/prowlarr";
+import { withDynamicSources } from "../sources/registry";
 import { readClipboard, writeClipboard } from "../util/clipboard";
 import { cleanText, truncate } from "../util/format";
 import {
@@ -24,10 +32,11 @@ import { Spinner } from "./components/Spinner";
 import { TabTitle } from "./components/TabTitle";
 import { Splash } from "./views/Splash";
 import { DelugeSettingsPrompt } from "./components/DelugeSettingsPrompt";
+import { ProwlarrSettingsPrompt } from "./components/ProwlarrSettingsPrompt";
 import { footerHints } from "./keymap";
 import { COLOR, ICON } from "./theme";
 import { useMouseWheel } from "./hooks/useMouseWheel";
-import type { SourceId } from "../sources/types";
+import type { Source } from "../sources/types";
 
 export function App({
   initialMagnet,
@@ -64,6 +73,7 @@ export function App({
   const cols = size.cols;
 
   const [config, setConfigState] = useState<Config | null>(null);
+  const [dynamicSources, setDynamicSources] = useState<readonly Source[]>([]);
   const [view, setView] = useState<View>("splash");
   const [query, setQuery] = useState("");
   const [section, setSection] = useState<Section>("all");
@@ -71,12 +81,28 @@ export function App({
   const [captureMode, setCaptureMode] = useState<CaptureMode>("none");
   const [showHelp, setShowHelp] = useState(false);
   const [editingDeluge, setEditingDeluge] = useState(false);
+  const [editingProwlarr, setEditingProwlarr] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const booting = useRef(false);
 
   const setConfig = useCallback((c: Config) => {
     setConfigState(c);
     void saveConfig(c);
+  }, []);
+
+  // Fail-soft: an unreachable Prowlarr instance only surfaces a notice, the app keeps
+  // working with the built-in sources (see the "not blocking" boot call below).
+  const loadProwlarrSources = useCallback((prowlarr: ProwlarrConfig | null) => {
+    if (!prowlarr) {
+      setDynamicSources([]);
+      return;
+    }
+    void buildProwlarrSources(prowlarr)
+      .then((sources) => setDynamicSources(sources))
+      .catch((e: unknown) => {
+        setDynamicSources([]);
+        setNotice(`Prowlarr unreachable: ${e instanceof Error ? e.message : String(e)}`);
+      });
   }, []);
 
   const sendToDeluge = useCallback(
@@ -110,6 +136,7 @@ export function App({
       const cfg = await loadConfig();
       if (!alive) return;
       setConfigState(cfg);
+      loadProwlarrSources(cfg.prowlarr);
       const launch = initialMagnet
         ? parseInput(initialMagnet)
         : initialTorrent
@@ -136,7 +163,7 @@ export function App({
     return () => {
       alive = false;
     };
-  }, [initialMagnet, initialTorrent]);
+  }, [initialMagnet, initialTorrent, loadProwlarrSources]);
 
   const quitAll = useCallback(() => {
     if (onQuit) onQuit();
@@ -155,6 +182,21 @@ export function App({
       setNotice(`Deluge connection saved: ${truncate(deluge.url, 48)}`);
     },
     [config, setConfig, closeDelugePrompt],
+  );
+
+  const closeProwlarrPrompt = useCallback(() => {
+    setEditingProwlarr(false);
+  }, []);
+
+  const setProwlarr = useCallback(
+    (prowlarr: ProwlarrConfig) => {
+      closeProwlarrPrompt();
+      if (!config) return;
+      setConfig({ ...config, prowlarr });
+      setNotice(`Prowlarr connection saved: ${truncate(prowlarr.url, 48)}`);
+      loadProwlarrSources(prowlarr);
+    },
+    [config, setConfig, closeProwlarrPrompt, loadProwlarrSources],
   );
 
   const copyMagnet = useCallback((input: { name: string; magnet: string }) => {
@@ -221,18 +263,21 @@ export function App({
   const contentWidth = Math.max(24, cols - RAIL_WIDTH - 3);
   const ruleWidth = Math.max(10, cols - 2);
 
+  const sources = useMemo(() => withDynamicSources(dynamicSources), [dynamicSources]);
+
   const store: Store | null = useMemo(() => {
     if (!config) return null;
     return {
       config,
       setConfig,
+      sources,
       view,
       setView,
       query,
       submitQuery,
       section,
       setSection,
-      region: showHelp || editingDeluge ? "help" : region,
+      region: showHelp || editingDeluge || editingProwlarr ? "help" : region,
       setRegion,
       captureMode,
       setCaptureMode,
@@ -249,6 +294,7 @@ export function App({
     };
   }, [
     config,
+    sources,
     view,
     query,
     submitQuery,
@@ -256,6 +302,7 @@ export function App({
     region,
     showHelp,
     editingDeluge,
+    editingProwlarr,
     captureMode,
     sendToDeluge,
     copyMagnet,
@@ -275,7 +322,7 @@ export function App({
         quitAll();
         return;
       }
-      if (editingDeluge) return; // the prompt owns input (its own esc + enter)
+      if (editingDeluge || editingProwlarr) return; // the prompt owns input (its own esc + enter)
       if (captureMode === "text") return;
       if (showHelp) {
         setShowHelp(false);
@@ -288,6 +335,11 @@ export function App({
       if (input === "o") {
         setShowHelp(false);
         setEditingDeluge(true);
+        return;
+      }
+      if (input === "p") {
+        setShowHelp(false);
+        setEditingProwlarr(true);
         return;
       }
       if (input === "m") {
@@ -367,10 +419,21 @@ export function App({
           </Box>
         ) : null}
 
+        {editingProwlarr ? (
+          <Box marginTop={1}>
+            <ProwlarrSettingsPrompt
+              width={Math.max(24, Math.min(cols - 4, 62))}
+              value={store.config.prowlarr}
+              onSubmit={setProwlarr}
+              onCancel={closeProwlarrPrompt}
+            />
+          </Box>
+        ) : null}
+
         <Box
           height={bodyH}
           marginTop={compact ? 0 : 1}
-          display={showHelp || editingDeluge ? "none" : "flex"}
+          display={showHelp || editingDeluge || editingProwlarr ? "none" : "flex"}
           overflow="hidden"
         >
           <Sidebar />
@@ -380,7 +443,7 @@ export function App({
         </Box>
 
         {showFooter ? (
-          <Box display={showHelp || editingDeluge ? "none" : "flex"}>
+          <Box display={showHelp || editingDeluge || editingProwlarr ? "none" : "flex"}>
             <Footer hints={footerHints(region)} />
           </Box>
         ) : null}

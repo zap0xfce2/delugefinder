@@ -32,6 +32,8 @@ function write(cmd: string, args: string[], text: string): Promise<boolean> {
     try {
       const proc = spawn(cmd, args, { windowsHide: true });
       let settled = false;
+      // `done` below closes over `timer` before it's assigned; must stay `let`.
+      // eslint-disable-next-line prefer-const
       let timer: ReturnType<typeof setTimeout>;
       const done = (ok: boolean): void => {
         if (settled) return;

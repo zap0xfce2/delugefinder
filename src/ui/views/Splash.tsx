@@ -3,12 +3,10 @@ import { Logo } from "../components/Logo";
 import { SearchBar } from "../components/SearchBar";
 import { LOGO_WIDTH } from "../logo";
 import { useStore } from "../store";
-import { sourcesByGroup } from "../../sources/registry";
+import { GROUP_ORDER } from "../../sources/registry";
 import { COLOR, ICON } from "../theme";
 
-const CATEGORIES = sourcesByGroup()
-  .map((g) => g.group.toLowerCase())
-  .join(`  ${ICON.dot}  `);
+const CATEGORIES = GROUP_ORDER.map((g) => g.toLowerCase()).join(`  ${ICON.dot}  `);
 
 export function Splash() {
   const { submitQuery, quitAll, cols, rows } = useStore();

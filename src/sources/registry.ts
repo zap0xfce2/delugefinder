@@ -1,35 +1,13 @@
-import { eztv } from "./eztv";
-import { fitgirl } from "./fitgirl";
-import { nyaa } from "./nyaa";
-import { subsplease } from "./subsplease";
-import { tpbMovies, tpbTv } from "./piratebay";
-import { x1337Movies, x1337Tv } from "./x1337";
-import { yts } from "./yts";
-import type { Source, SourceGroup, SourceId } from "./types";
+import type { Source, SourceGroup } from "./types";
 
-export const SOURCES: readonly Source[] = [
-  fitgirl,
-  yts,
-  tpbMovies,
-  x1337Movies,
-  eztv,
-  tpbTv,
-  x1337Tv,
-  nyaa,
-  subsplease,
-];
+// Fixed priority order, reused by src/prowlarr/categories.ts for its tie-break and by
+// Splash's category line. Purely conceptual (Games/Movies/TV/Anime) — independent of
+// which sources are currently configured/reachable.
+export const GROUP_ORDER: readonly SourceGroup[] = ["Games", "Movies", "TV", "Anime"];
 
-export const DEFAULT_SOURCE: Source = SOURCES[0]!;
-
-export function getSource(id: SourceId): Source {
-  return SOURCES.find((s) => s.id === id) ?? DEFAULT_SOURCE;
-}
-
-const GROUP_ORDER: readonly SourceGroup[] = ["Games", "Movies", "TV", "Anime"];
-
-export function sourcesByGroup(): { group: SourceGroup; sources: Source[] }[] {
-  return GROUP_ORDER.map((group) => ({
-    group,
-    sources: SOURCES.filter((s) => s.group === group),
-  })).filter((g) => g.sources.length > 0);
+// Currently a passthrough (all sources are dynamic, e.g. Prowlarr indexers). Kept as
+// the single merge point so a second dynamic provider could be added later without
+// touching call sites like App.tsx.
+export function withDynamicSources(dynamic: readonly Source[]): Source[] {
+  return [...dynamic];
 }

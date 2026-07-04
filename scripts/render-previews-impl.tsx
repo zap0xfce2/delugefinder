@@ -5,7 +5,7 @@ import React from "react";
 import { render } from "ink-testing-library";
 import { Box, Text } from "ink";
 import { StoreContext, type Store } from "../src/ui/store";
-import { COLOR, ICON, SOURCE_STYLE } from "../src/ui/theme";
+import { COLOR, ICON, sourceStyle } from "../src/ui/theme";
 import { Logo } from "../src/ui/components/Logo";
 import { Rule } from "../src/ui/components/Rule";
 import { Footer } from "../src/ui/components/Footer";
@@ -13,7 +13,7 @@ import { Sidebar, RAIL_WIDTH } from "../src/ui/components/Sidebar";
 import { SearchBar } from "../src/ui/components/SearchBar";
 import { Panel } from "../src/ui/components/Panel";
 import { footerHints } from "../src/ui/keymap";
-import { sourcesByGroup } from "../src/sources/registry";
+import { GROUP_ORDER } from "../src/sources/registry";
 import { cleanText, formatBytes, formatRelative } from "../src/util/format";
 import { ansiToSvg, type AnsiToSvgOptions } from "./ansi-to-svg";
 import type { Config } from "../src/config/config";
@@ -28,19 +28,20 @@ mkdirSync(OUT_DIR, { recursive: true });
 const NOW = Math.floor(Date.now() / 1000);
 
 const RESULTS: TorrentResult[] = [
-  { infoHash: "b2", name: "Oppenheimer (2023) [1080p WEB]", source: "yts", sizeBytes: 2.1e9, seeders: 1240, leechers: 88, magnet: "", added: NOW - 7200 },
-  { infoHash: "g7", name: "Dune: Part Two (2024) [2160p BluRay]", source: "yts", sizeBytes: 8.4e9, seeders: 910, leechers: 41, magnet: "", added: NOW - 90000 },
-  { infoHash: "c3", name: "Breaking Bad S05E14 1080p WEB-DL", source: "eztv", sizeBytes: 1.6e9, seeders: 540, leechers: 31, magnet: "", added: NOW - 1800 },
-  { infoHash: "e5", name: "[Erai-raws] Jujutsu Kaisen S2 - 23 [1080p]", source: "nyaa", sizeBytes: 1.3e9, seeders: 320, leechers: 12, magnet: "", added: NOW - 900 },
-  { infoHash: "d4", name: "Frieren - 28 [1080p]", source: "subsplease", sizeBytes: 1.4e9, seeders: 0, leechers: 0, magnet: "", added: NOW - 600 },
-  { infoHash: "a1", name: "Elden Ring: Shadow of the Erdtree Edition", source: "fitgirl", sizeBytes: 0, seeders: 0, leechers: 0, magnet: "", added: NOW - 3600 },
+  { infoHash: "b2", name: "Oppenheimer (2023) [1080p WEB]", source: "prowlarr:yts", sizeBytes: 2.1e9, seeders: 1240, leechers: 88, magnet: "", added: NOW - 7200 },
+  { infoHash: "g7", name: "Dune: Part Two (2024) [2160p BluRay]", source: "prowlarr:yts", sizeBytes: 8.4e9, seeders: 910, leechers: 41, magnet: "", added: NOW - 90000 },
+  { infoHash: "c3", name: "Breaking Bad S05E14 1080p WEB-DL", source: "prowlarr:eztv", sizeBytes: 1.6e9, seeders: 540, leechers: 31, magnet: "", added: NOW - 1800 },
+  { infoHash: "e5", name: "[Erai-raws] Jujutsu Kaisen S2 - 23 [1080p]", source: "prowlarr:nyaa", sizeBytes: 1.3e9, seeders: 320, leechers: 12, magnet: "", added: NOW - 900 },
+  { infoHash: "d4", name: "Frieren - 28 [1080p]", source: "prowlarr:subsplease", sizeBytes: 1.4e9, seeders: 0, leechers: 0, magnet: "", added: NOW - 600 },
+  { infoHash: "a1", name: "Elden Ring: Shadow of the Erdtree Edition", source: "prowlarr:fitgirl", sizeBytes: 0, seeders: 0, leechers: 0, magnet: "", added: NOW - 3600 },
 ];
 
 function makeStore(overrides: Partial<Store> = {}): Store {
   const noop = (): void => {};
   return {
-    config: { deluge: { url: "http://localhost:8112", password: "" } } as Config,
+    config: { deluge: { url: "http://localhost:8112", password: "" }, prowlarr: null } as Config,
     setConfig: noop,
+    sources: [],
     view: "browser",
     setView: noop,
     query: "",
@@ -86,9 +87,7 @@ function save(
   console.log(`preview/${name}.svg`);
 }
 
-const CATEGORIES = sourcesByGroup()
-  .map((g) => g.group.toLowerCase())
-  .join(`  ${ICON.dot}  `);
+const CATEGORIES = GROUP_ORDER.map((g) => g.toLowerCase()).join(`  ${ICON.dot}  `);
 
 save(
   "splash",
@@ -150,7 +149,7 @@ save(
               </Box>
               {browseResults.map((r, i) => {
                 const here = i === 0;
-                const ss = SOURCE_STYLE[r.source];
+                const ss = sourceStyle(r.source);
                 return (
                   <Box key={r.infoHash}>
                     <Box width={2} flexShrink={0}>

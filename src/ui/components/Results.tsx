@@ -6,7 +6,6 @@ import { SearchBar } from "./SearchBar";
 import { Panel } from "./Panel";
 import { Rule } from "./Rule";
 import { useConcurrentSearch } from "../hooks/useConcurrentSearch";
-import { getSource, SOURCES } from "../../sources/registry";
 import { wrapStep, windowStart, resultsPanelOuter } from "../move";
 import { sortResults, nextSort, sortLabel, sortArrow, type Sort, type SortField } from "../sort";
 import { COLOR, GUTTER, ICON, sourceStyle } from "../theme";
@@ -28,8 +27,8 @@ function DetailRow({ label, value }: { label: string; value: ReactNode }) {
   );
 }
 
-function Detail({ r, width }: { r: TorrentResult; width: number }) {
-  const ss = sourceStyle(r.source);
+function Detail({ r, width, sourceLabel }: { r: TorrentResult; width: number; sourceLabel?: string }) {
+  const ss = sourceStyle(r.source, sourceLabel);
   const date = formatRelative(r.added);
   const health =
     r.seeders || r.leechers ? (
@@ -120,18 +119,21 @@ export function Results() {
     copyMagnet,
     contentWidth,
     listRows,
+    sources,
   } = useStore();
 
-  const search = useConcurrentSearch(query);
+  const sourceById = useMemo(() => new Map(sources.map((s) => [s.id, s])), [sources]);
+
+  const search = useConcurrentSearch(query, sources);
 
   const [sort, setSort] = useState<Sort>("none");
   const results = useMemo(() => {
     const cat = CATEGORIES.find((c) => c.key === section);
     const base = cat?.group
-      ? search.results.filter((r) => getSource(r.source).group === cat.group)
+      ? search.results.filter((r) => sourceById.get(r.source)?.group === cat.group)
       : search.results;
     return sortResults(base, sort);
-  }, [search.results, section, sort]);
+  }, [search.results, section, sort, sourceById]);
 
   const focused = region === "content";
   const [mode, setMode] = useState<Mode>("list");
@@ -234,7 +236,7 @@ export function Results() {
     [search.perSource],
   );
   const activeCat = CATEGORIES.find((c) => c.key === section);
-  const tabSources = activeCat?.group ? SOURCES.filter((s) => s.group === activeCat.group) : SOURCES;
+  const tabSources = activeCat?.group ? sources.filter((s) => s.group === activeCat.group) : sources;
   const tabErrored =
     tabSources.length > 0 && tabSources.every((s) => search.perSource[s.id]?.error);
   const showStats = useMemo(
@@ -262,7 +264,7 @@ export function Results() {
     }
     if (results.length === 0) {
       if (erroredCount >= search.total) {
-        const downAll = SOURCES.filter((s) => search.perSource[s.id]?.error);
+        const downAll = sources.filter((s) => search.perSource[s.id]?.error);
         return (
           <Text color={COLOR.warn}>
             {`Couldn't reach any source. They may be down${outageCodes(downAll)}.`}
@@ -327,7 +329,11 @@ export function Results() {
           height={panelOuter}
         >
           {mode === "detail" && detail ? (
-            <Detail r={detail} width={Math.max(10, contentWidth - 4)} />
+            <Detail
+              r={detail}
+              width={Math.max(10, contentWidth - 4)}
+              sourceLabel={sourceById.get(detail.source)?.label}
+            />
           ) : (
             <>
               <Box>{status()}</Box>
@@ -363,7 +369,7 @@ export function Results() {
                 {visible.map((r, i) => {
                   const index = start + i;
                   const here = index === clamped && focused && mode === "list";
-                  const ss = sourceStyle(r.source);
+                  const ss = sourceStyle(r.source, sourceById.get(r.source)?.label);
                   return (
                     <Box key={r.infoHash}>
                       <Box width={GUTTER} flexShrink={0}>

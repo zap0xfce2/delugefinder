@@ -1,13 +1,7 @@
-export type SourceId =
-  | "fitgirl"
-  | "yts"
-  | "eztv"
-  | "nyaa"
-  | "subsplease"
-  | "tpb-movies"
-  | "tpb-tv"
-  | "x1337-movies"
-  | "x1337-tv";
+// Built-in sources use their fixed literal id; dynamically discovered sources
+// (e.g. a Prowlarr indexer) use the `prowlarr:<indexerId>` convention, see
+// prowlarrSourceId() in src/sources/prowlarr.ts.
+export type SourceId = string;
 
 export type SourceGroup = "Games" | "Movies" | "TV" | "Anime";
 
