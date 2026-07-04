@@ -40,12 +40,42 @@ export const SOURCE_STYLE: Record<SourceId, { tag: string; color: string }> = {
   "x1337-tv": { tag: "1337", color: "#f6a55c" },
 };
 
+// Reused hues (no new gradient) for sources without a hand-picked SOURCE_STYLE entry,
+// e.g. dynamically discovered Prowlarr indexers.
+const FALLBACK_PALETTE: readonly string[] = [
+  COLOR.accent,
+  COLOR.good,
+  COLOR.warn,
+  COLOR.bright,
+  "#5fd0c5",
+  "#f6a55c",
+  COLOR.bad,
+];
+
+function hashString(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
+function fallbackTag(id: string, label?: string): string {
+  const letters = (label || id).replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+  return letters.slice(0, 4) || "•";
+}
+
 // Tolerant lookup: a source id may be absent (a pasted magnet / bare infohash) or
 // no longer exist (a removed source persisted in old history/seeds). Fall back to a
-// neutral tag rather than indexing SOURCE_STYLE and crashing on `undefined`.
-export function sourceStyle(id?: SourceId): { tag: string; color: string } {
-  const s = id ? (SOURCE_STYLE as Record<string, { tag: string; color: string }>)[id] : undefined;
-  return s ?? { tag: "•", color: COLOR.alt };
+// neutral tag rather than indexing SOURCE_STYLE and crashing on `undefined`. An id
+// without a hand-picked entry (e.g. a Prowlarr indexer) gets a deterministic tag/color
+// derived from its label/id instead of the generic dot.
+export function sourceStyle(id?: SourceId, label?: string): { tag: string; color: string } {
+  if (!id) return { tag: "•", color: COLOR.alt };
+  const known = SOURCE_STYLE[id];
+  if (known) return known;
+  return {
+    tag: fallbackTag(id, label),
+    color: FALLBACK_PALETTE[hashString(id) % FALLBACK_PALETTE.length]!,
+  };
 }
 
 function rgb(hex: string): [number, number, number] {

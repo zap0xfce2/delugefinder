@@ -19,6 +19,7 @@ export const HELP_GROUPS: HelpGroup[] = [
       { keys: "tab", label: "Switch pane" },
       { keys: "esc", label: "Back" },
       { keys: "o", label: "Deluge connection" },
+      { keys: "p", label: "Prowlarr connection" },
       { keys: "q", label: "Quit" },
     ],
   },

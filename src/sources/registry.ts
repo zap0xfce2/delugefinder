@@ -25,11 +25,20 @@ export function getSource(id: SourceId): Source {
   return SOURCES.find((s) => s.id === id) ?? DEFAULT_SOURCE;
 }
 
-const GROUP_ORDER: readonly SourceGroup[] = ["Games", "Movies", "TV", "Anime"];
+// Fixed priority order, reused by src/prowlarr/categories.ts for its tie-break and by
+// Splash's category line — the 4 groups here are already fully covered by the built-in
+// SOURCES, so dynamically added sources can only join an existing group, never add one.
+export const GROUP_ORDER: readonly SourceGroup[] = ["Games", "Movies", "TV", "Anime"];
 
 export function sourcesByGroup(): { group: SourceGroup; sources: Source[] }[] {
   return GROUP_ORDER.map((group) => ({
     group,
     sources: SOURCES.filter((s) => s.group === group),
   })).filter((g) => g.sources.length > 0);
+}
+
+// Merges the built-in sources with dynamically discovered ones (currently: Prowlarr
+// indexers). SOURCES itself stays static so the preview build never needs network access.
+export function withDynamicSources(dynamic: readonly Source[]): Source[] {
+  return [...SOURCES, ...dynamic];
 }

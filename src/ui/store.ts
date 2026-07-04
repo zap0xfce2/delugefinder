@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import type { Config } from "../config/config";
-import type { SourceGroup, SourceId } from "../sources/types";
+import type { Source, SourceGroup, SourceId } from "../sources/types";
 
 export type View = "splash" | "browser";
 
@@ -23,6 +23,7 @@ export type CaptureMode = "none" | "text" | "esc";
 export interface Store {
   config: Config;
   setConfig: (c: Config) => void;
+  sources: readonly Source[];
 
   view: View;
   setView: (v: View) => void;

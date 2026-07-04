@@ -5,7 +5,7 @@ import React from "react";
 import { render } from "ink-testing-library";
 import { Box, Text } from "ink";
 import { StoreContext, type Store } from "../src/ui/store";
-import { COLOR, ICON, SOURCE_STYLE } from "../src/ui/theme";
+import { COLOR, ICON, sourceStyle } from "../src/ui/theme";
 import { Logo } from "../src/ui/components/Logo";
 import { Rule } from "../src/ui/components/Rule";
 import { Footer } from "../src/ui/components/Footer";
@@ -13,7 +13,7 @@ import { Sidebar, RAIL_WIDTH } from "../src/ui/components/Sidebar";
 import { SearchBar } from "../src/ui/components/SearchBar";
 import { Panel } from "../src/ui/components/Panel";
 import { footerHints } from "../src/ui/keymap";
-import { sourcesByGroup } from "../src/sources/registry";
+import { SOURCES, sourcesByGroup } from "../src/sources/registry";
 import { cleanText, formatBytes, formatRelative } from "../src/util/format";
 import { ansiToSvg, type AnsiToSvgOptions } from "./ansi-to-svg";
 import type { Config } from "../src/config/config";
@@ -39,8 +39,9 @@ const RESULTS: TorrentResult[] = [
 function makeStore(overrides: Partial<Store> = {}): Store {
   const noop = (): void => {};
   return {
-    config: { deluge: { url: "http://localhost:8112", password: "" } } as Config,
+    config: { deluge: { url: "http://localhost:8112", password: "" }, prowlarr: null } as Config,
     setConfig: noop,
+    sources: SOURCES,
     view: "browser",
     setView: noop,
     query: "",
@@ -150,7 +151,7 @@ save(
               </Box>
               {browseResults.map((r, i) => {
                 const here = i === 0;
-                const ss = SOURCE_STYLE[r.source];
+                const ss = sourceStyle(r.source);
                 return (
                   <Box key={r.infoHash}>
                     <Box width={2} flexShrink={0}>
