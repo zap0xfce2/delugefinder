@@ -378,7 +378,7 @@ export function App({
   if (!store) {
     return (
       <Box height={rows} justifyContent="center" alignItems="center">
-        <Spinner label="Starting torlink" />
+        <Spinner label="Starting delugefinder" />
       </Box>
     );
   }

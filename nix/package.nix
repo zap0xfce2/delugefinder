@@ -10,14 +10,17 @@
 }:
 
 buildNpmPackage (finalAttrs: {
-  pname = "torlink";
+  pname = "delugefinder";
   version = "1.2.0";
   __structuredAttrs = true;
   strictDeps = true;
 
+  # FIXME: hash/npmDepsHash below still point at the pre-rename torlink repo
+  # state and must be recomputed (e.g. via nix-prefetch-github) once
+  # zap0xfce2/delugefinder exists at this tag.
   src = fetchFromGitHub {
-    owner = "baairon";
-    repo = "torlink";
+    owner = "zap0xfce2";
+    repo = "delugefinder";
     tag = "v${finalAttrs.version}";
     hash = "sha256-nspTUJE9hPxHHt3SuYzZlsvPaUKq/UEwvdKb+/dn3lY=";
   };
@@ -42,8 +45,8 @@ buildNpmPackage (finalAttrs: {
   # add wl-copy and xclip to nix readeable path
   postInstall = ''
     tar -xzf ${finalAttrs.nodeDatachannelPrebuilt} \
-      -C $out/lib/node_modules/torlnk/node_modules/node-datachannel
-      wrapProgram $out/bin/torlnk \
+      -C $out/lib/node_modules/delugefinder/node_modules/node-datachannel
+      wrapProgram $out/bin/dlfi \
         --prefix PATH : ${
           lib.makeBinPath [
             wl-clipboard
@@ -53,12 +56,12 @@ buildNpmPackage (finalAttrs: {
   '';
 
   meta = {
-    description = "Torlink is a torrent finder that lives in your terminal, with zero setup and nothing to configure.";
-    homepage = "https://github.com/baairon/torlink";
-    changelog = "https://github.com/baairon/torlink/releases/tag/v${finalAttrs.src.tag}";
+    description = "delugefinder is a torrent finder that lives in your terminal, with zero setup and nothing to configure.";
+    homepage = "https://github.com/zap0xfce2/delugefinder";
+    changelog = "https://github.com/zap0xfce2/delugefinder/releases/tag/v${finalAttrs.src.tag}";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ ghastrum ];
-    mainProgram = "torlnk";
+    mainProgram = "dlfi";
     platforms = lib.platforms.linux;
   };
 })

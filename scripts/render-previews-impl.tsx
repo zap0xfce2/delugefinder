@@ -82,7 +82,7 @@ function save(
   }
   writeFileSync(
     join(OUT_DIR, `${name}.svg`),
-    ansiToSvg(frame, { cols: COLS, title: "torlink", ...extra }),
+    ansiToSvg(frame, { cols: COLS, title: "delugefinder", ...extra }),
   );
   console.log(`preview/${name}.svg`);
 }
@@ -95,7 +95,7 @@ save(
   <Box height={18} flexDirection="column" justifyContent="center" alignItems="center" width={COLS}>
     <Logo />
     <Box marginTop={2}>
-      <Text color={COLOR.text}>A curated, terminal-native torrent search for Deluge.</Text>
+      <Text color={COLOR.text}>Find torrents. Send to Deluge.</Text>
     </Box>
     <Box>
       <Text dimColor>{CATEGORIES}</Text>

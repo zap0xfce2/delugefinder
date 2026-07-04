@@ -16,7 +16,7 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      // torlink deliberately writes ANSI escapes (\x1b[...) for terminal rendering.
+      // delugefinder deliberately writes ANSI escapes (\x1b[...) for terminal rendering.
       "no-control-regex": "off",
       // Fail-soft error handling relies on intentionally empty `catch {}` blocks.
       "no-empty": ["error", { allowEmptyCatch: true }],
