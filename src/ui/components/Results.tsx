@@ -20,7 +20,7 @@ function DetailRow({ label, value }: { label: string; value: ReactNode }) {
   return (
     <Box>
       <Box width={9} flexShrink={0}>
-        <Text dimColor>{label}</Text>
+        <Text dimColor color={COLOR.text}>{label}</Text>
       </Box>
       <Box flexGrow={1} minWidth={0}>{value}</Box>
     </Box>
@@ -33,13 +33,13 @@ function Detail({ r, width, sourceLabel }: { r: TorrentResult; width: number; so
   const health =
     r.seeders || r.leechers ? (
       <Text>
-        <Text color={r.seeders > 0 ? COLOR.good : undefined} bold={r.seeders > 0}>
+        <Text color={r.seeders > 0 ? COLOR.good : COLOR.text} bold={r.seeders > 0}>
           {r.seeders}
         </Text>
-        <Text dimColor>{` seeders ${ICON.dot} ${r.leechers} leechers`}</Text>
+        <Text dimColor color={COLOR.text}>{` seeders ${ICON.dot} ${r.leechers} leechers`}</Text>
       </Text>
     ) : (
-      <Text dimColor>unknown</Text>
+      <Text dimColor color={COLOR.text}>unknown</Text>
     );
   return (
     <Box flexDirection="column">
@@ -63,15 +63,15 @@ function Detail({ r, width, sourceLabel }: { r: TorrentResult; width: number; so
             r.sizeBytes > 0 ? (
               <Text color={COLOR.text}>{formatBytes(r.sizeBytes)}</Text>
             ) : (
-              <Text dimColor>unknown</Text>
+              <Text dimColor color={COLOR.text}>unknown</Text>
             )
           }
         />
         <DetailRow label="Health" value={health} />
         {r.numFiles ? (
-          <DetailRow label="Files" value={<Text dimColor>{String(r.numFiles)}</Text>} />
+          <DetailRow label="Files" value={<Text dimColor color={COLOR.text}>{String(r.numFiles)}</Text>} />
         ) : null}
-        {date ? <DetailRow label="Added" value={<Text dimColor>{date}</Text>} /> : null}
+        {date ? <DetailRow label="Added" value={<Text dimColor color={COLOR.text}>{date}</Text>} /> : null}
         <DetailRow
           label="Hash"
           value={
@@ -94,14 +94,14 @@ function Detail({ r, width, sourceLabel }: { r: TorrentResult; width: number; so
           d
         </Text>
         <Text color={COLOR.text}> Send to Deluge</Text>
-        <Text dimColor>{`     ${ICON.dot}     `}</Text>
+        <Text dimColor color={COLOR.text}>{`     ${ICON.dot}     `}</Text>
         <Text color={COLOR.accent} bold>
           y
         </Text>
         <Text color={COLOR.text}> Copy magnet</Text>
-        <Text dimColor>{`     ${ICON.dot}     `}</Text>
+        <Text dimColor color={COLOR.text}>{`     ${ICON.dot}     `}</Text>
         <Text color={COLOR.alt}>esc</Text>
-        <Text dimColor> back</Text>
+        <Text dimColor color={COLOR.text}> back</Text>
       </Box>
     </Box>
   );
@@ -257,7 +257,11 @@ export function Results() {
   const status = () => {
     if (search.loading) {
       if (results.length > 0)
-        return <Text dimColor>{`searching… ${search.done}/${search.total} sources${sortNote}`}</Text>;
+        return (
+          <Text dimColor color={COLOR.text}>
+            {`searching… ${search.done}/${search.total} sources${sortNote}`}
+          </Text>
+        );
       return (
         <Spinner label={`${browsing ? "Loading" : "Searching"} ${search.done}/${search.total} sources`} />
       );
@@ -281,9 +285,13 @@ export function Results() {
         );
       }
       if (search.results.length > 0 && activeCat?.group)
-        return <Text dimColor>{`No ${activeCat.label.toLowerCase()} results yet. Try another tab or a search.`}</Text>;
+        return (
+          <Text dimColor color={COLOR.text}>
+            {`No ${activeCat.label.toLowerCase()} results yet. Try another tab or a search.`}
+          </Text>
+        );
       return (
-        <Text dimColor>
+        <Text dimColor color={COLOR.text}>
           {browsing ? "Nothing new right now." : `No results for "${truncate(query, 28)}".`}
         </Text>
       );
@@ -292,7 +300,7 @@ export function Results() {
     const head = browsing
       ? "newest across all sources"
       : `${results.length} result${results.length === 1 ? "" : "s"}`;
-    return <Text dimColor>{`${head}${note}${sortNote}`}</Text>;
+    return <Text dimColor color={COLOR.text}>{`${head}${note}${sortNote}`}</Text>;
   };
 
   const sortMark = (field: SortField, label: string): ReactNode => {
@@ -342,27 +350,27 @@ export function Results() {
                   <Box>
                     <Box width={GUTTER} flexShrink={0} />
                     <Box width={numW} flexShrink={0} justifyContent="flex-end">
-                      <Text bold dimColor>#</Text>
+                      <Text bold dimColor color={COLOR.text}>#</Text>
                     </Box>
                     <Box flexGrow={1} minWidth={0} marginLeft={1}>
-                      <Text bold dimColor>Name</Text>
+                      <Text bold dimColor color={COLOR.text}>Name</Text>
                     </Box>
                     {showStats ? (
                       <>
                         <Box width={10} flexShrink={0} marginLeft={1} justifyContent="flex-end">
-                          <Text bold dimColor>{sortMark("size", "Size")}</Text>
+                          <Text bold dimColor color={COLOR.text}>{sortMark("size", "Size")}</Text>
                         </Box>
                         <Box width={9} flexShrink={0} marginLeft={1} justifyContent="flex-end">
-                          <Text bold dimColor>{sortMark("seeders", "Seed:Lch")}</Text>
+                          <Text bold dimColor color={COLOR.text}>{sortMark("seeders", "Seed:Lch")}</Text>
                         </Box>
                       </>
                     ) : (
                       <Box width={12} flexShrink={0} marginLeft={1} justifyContent="flex-end">
-                        <Text bold dimColor>Added</Text>
+                        <Text bold dimColor color={COLOR.text}>Added</Text>
                       </Box>
                     )}
                     <Box width={4} flexShrink={0} marginLeft={1} justifyContent="flex-end">
-                      <Text bold dimColor>{sortMark("source", "Src")}</Text>
+                      <Text bold dimColor color={COLOR.text}>{sortMark("source", "Src")}</Text>
                     </Box>
                   </Box>
                 ) : null}
@@ -376,12 +384,12 @@ export function Results() {
                         <Text color={COLOR.accent}>{here ? ICON.pointer : ""}</Text>
                       </Box>
                       <Box width={numW} flexShrink={0} justifyContent="flex-end">
-                        <Text dimColor>{index + 1}</Text>
+                        <Text dimColor color={COLOR.text}>{index + 1}</Text>
                       </Box>
                       <Box flexGrow={1} minWidth={0} marginLeft={1}>
                         <Text
                           wrap="truncate-end"
-                          color={here ? COLOR.accent : undefined}
+                          color={here ? COLOR.accent : COLOR.text}
                           dimColor={!here}
                           bold={here}
                         >
@@ -391,10 +399,10 @@ export function Results() {
                       {showStats ? (
                         <>
                           <Box width={10} flexShrink={0} marginLeft={1} justifyContent="flex-end">
-                            <Text dimColor>{r.sizeBytes > 0 ? formatBytes(r.sizeBytes) : "-"}</Text>
+                            <Text dimColor color={COLOR.text}>{r.sizeBytes > 0 ? formatBytes(r.sizeBytes) : "-"}</Text>
                           </Box>
                           <Box width={9} flexShrink={0} marginLeft={1} justifyContent="flex-end">
-                            <Text color={r.seeders > 0 ? COLOR.good : undefined} dimColor={r.seeders === 0}>
+                            <Text color={r.seeders > 0 ? COLOR.good : COLOR.text} dimColor={r.seeders === 0}>
                               {r.seeders || r.leechers
                                 ? `${formatCount(r.seeders)}:${formatCount(r.leechers)}`
                                 : "-"}
@@ -403,7 +411,7 @@ export function Results() {
                         </>
                       ) : (
                         <Box width={12} flexShrink={0} marginLeft={1} justifyContent="flex-end">
-                          <Text dimColor>{formatRelative(r.added) || "-"}</Text>
+                          <Text dimColor color={COLOR.text}>{formatRelative(r.added) || "-"}</Text>
                         </Box>
                       )}
                       <Box width={4} flexShrink={0} marginLeft={1} justifyContent="flex-end">

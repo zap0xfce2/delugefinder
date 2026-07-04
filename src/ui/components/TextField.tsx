@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Text, useInput } from "ink";
+import { COLOR } from "../theme";
 
 export interface TextFieldProps {
   isDisabled?: boolean;
@@ -130,28 +131,32 @@ export function TextField({
   const displayValue = mask ? maskText(value) : value;
 
   if (isDisabled) {
-    return value ? <Text>{displayValue}</Text> : <Text dimColor>{placeholder}</Text>;
+    return value ? (
+      <Text color={COLOR.text}>{displayValue}</Text>
+    ) : (
+      <Text dimColor color={COLOR.text}>{placeholder}</Text>
+    );
   }
 
   if (value.length === 0) {
     if (placeholder) {
       return (
-        <Text>
-          <Text inverse>{placeholder[0]}</Text>
-          <Text dimColor>{placeholder.slice(1)}</Text>
+        <Text color={COLOR.text}>
+          <Text inverse color={COLOR.text}>{placeholder[0]}</Text>
+          <Text dimColor color={COLOR.text}>{placeholder.slice(1)}</Text>
         </Text>
       );
     }
-    return <Text inverse>{CURSOR}</Text>;
+    return <Text inverse color={COLOR.text}>{CURSOR}</Text>;
   }
 
   const before = displayValue.slice(0, cursor);
   const atChar = displayValue[cursor] ?? CURSOR;
   const after = cursor < displayValue.length ? displayValue.slice(cursor + 1) : "";
   return (
-    <Text>
+    <Text color={COLOR.text}>
       {before}
-      <Text inverse>{atChar}</Text>
+      <Text inverse color={COLOR.text}>{atChar}</Text>
       {after}
     </Text>
   );

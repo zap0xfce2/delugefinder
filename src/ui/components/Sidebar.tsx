@@ -49,7 +49,7 @@ export function Sidebar() {
                   ) : null}
                 </Box>
                 <Text
-                  color={selected ? (focused ? COLOR.accent : COLOR.alt) : undefined}
+                  color={selected ? (focused ? COLOR.accent : COLOR.alt) : COLOR.text}
                   dimColor={!selected}
                   bold={selected && focused}
                 >

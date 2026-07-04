@@ -35,6 +35,7 @@ export function Panel({ title, width, focused, count, height, children }: PanelP
         borderStyle="round"
         borderTop={false}
         borderColor={color}
+        borderBackgroundColor={COLOR.bg}
         paddingX={1}
         overflow="hidden"
       >

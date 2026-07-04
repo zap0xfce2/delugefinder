@@ -1,6 +1,7 @@
 import type { SourceId } from "../sources/types";
 
 export const COLOR = {
+  bg: "#000000",
   accent: "#a78bfa",
   text: "#e9e4f5",
   alt: "#b9a7e6",

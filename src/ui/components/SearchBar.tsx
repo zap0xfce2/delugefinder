@@ -39,9 +39,9 @@ export function SearchBar({
               onExitLeft={onExitLeft}
             />
           ) : value ? (
-            <Text wrap="truncate-end">{value}</Text>
+            <Text wrap="truncate-end" color={COLOR.text}>{value}</Text>
           ) : (
-            <Text dimColor>{placeholder}</Text>
+            <Text dimColor color={COLOR.text}>{placeholder}</Text>
           )}
         </Box>
       </Box>

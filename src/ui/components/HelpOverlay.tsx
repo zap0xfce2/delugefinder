@@ -27,6 +27,7 @@ export function HelpOverlay() {
       alignSelf="flex-start"
       borderStyle="round"
       borderColor={CARD_BORDER}
+      borderBackgroundColor={COLOR.bg}
       paddingX={columns ? 1 : 2}
       paddingY={1}
     >
@@ -42,21 +43,21 @@ export function HelpOverlay() {
             marginRight={columns && gi < HELP_GROUPS.length - 1 ? COL_GAP : 0}
             marginTop={!columns && gi > 0 ? 1 : 0}
           >
-            <Text bold>{group.title}</Text>
+            <Text bold color={COLOR.text}>{group.title}</Text>
             {group.hints.map((h) => (
               <Box key={h.keys + h.label}>
                 <Box width={columns ? KEY_W[gi] : KEY_W_STACKED} flexShrink={0}>
                   <Text color={COLOR.alt}>{h.keys}</Text>
                 </Box>
-                <Text dimColor>{h.label}</Text>
+                <Text dimColor color={COLOR.text}>{h.label}</Text>
               </Box>
             ))}
           </Box>
         ))}
       </Box>
       <Box marginTop={1} flexDirection="column">
-        <Text dimColor>Your downloaded files always stay on disk.</Text>
-        <Text dimColor>Press ? or esc to close</Text>
+        <Text dimColor color={COLOR.text}>Your downloaded files always stay on disk.</Text>
+        <Text dimColor color={COLOR.text}>Press ? or esc to close</Text>
       </Box>
     </Box>
   );

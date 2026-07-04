@@ -66,15 +66,15 @@ export function DelugeSettingsPrompt({
       <Box marginTop={1} flexDirection="column">
         <Box>
           <Text color={COLOR.alt}>tab</Text>
-          <Text dimColor> switch field</Text>
-          <Text dimColor>{`     ${ICON.dot}     `}</Text>
+          <Text dimColor color={COLOR.text}> switch field</Text>
+          <Text dimColor color={COLOR.text}>{`     ${ICON.dot}     `}</Text>
           <Text color={COLOR.alt}>↵</Text>
-          <Text dimColor> save</Text>
-          <Text dimColor>{`     ${ICON.dot}     `}</Text>
+          <Text dimColor color={COLOR.text}> save</Text>
+          <Text dimColor color={COLOR.text}>{`     ${ICON.dot}     `}</Text>
           <Text color={COLOR.alt}>esc</Text>
-          <Text dimColor> cancel</Text>
+          <Text dimColor color={COLOR.text}> cancel</Text>
         </Box>
-        <Text dimColor>Deluge&apos;s Web UI address and password. Stored locally in your config.</Text>
+        <Text dimColor color={COLOR.text}>Deluge&apos;s Web UI address and password. Stored locally in your config.</Text>
       </Box>
     </Box>
   );

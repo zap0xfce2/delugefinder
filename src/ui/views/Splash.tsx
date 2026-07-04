@@ -24,7 +24,8 @@ export function Splash() {
 
   return (
     <Box
-      height={Math.max(1, rows - 1)}
+      height={rows}
+      backgroundColor={COLOR.bg}
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
@@ -40,7 +41,7 @@ export function Splash() {
         <Text color={COLOR.text}>Find torrents. Send to Deluge.</Text>
       </Box>
       <Box>
-        <Text dimColor>{CATEGORIES}</Text>
+        <Text dimColor color={COLOR.text}>{CATEGORIES}</Text>
       </Box>
 
       <Box marginTop={1} width={barWidth}>
@@ -55,14 +56,14 @@ export function Splash() {
       <Box marginTop={1}>
         <Text>
           <Text color={COLOR.alt}>↵</Text>
-          <Text dimColor> search</Text>
-          <Text dimColor>{`  ${ICON.dot}  `}</Text>
-          <Text dimColor>empty </Text>
+          <Text dimColor color={COLOR.text}> search</Text>
+          <Text dimColor color={COLOR.text}>{`  ${ICON.dot}  `}</Text>
+          <Text dimColor color={COLOR.text}>empty </Text>
           <Text color={COLOR.alt}>↵</Text>
-          <Text dimColor> browse</Text>
-          <Text dimColor>{`  ${ICON.dot}  `}</Text>
+          <Text dimColor color={COLOR.text}> browse</Text>
+          <Text dimColor color={COLOR.text}>{`  ${ICON.dot}  `}</Text>
           <Text color={COLOR.alt}>^c</Text>
-          <Text dimColor> quit</Text>
+          <Text dimColor color={COLOR.text}> quit</Text>
         </Text>
       </Box>
     </Box>

@@ -377,7 +377,7 @@ export function App({
 
   if (!store) {
     return (
-      <Box height={rows} justifyContent="center" alignItems="center">
+      <Box height={rows} backgroundColor={COLOR.bg} justifyContent="center" alignItems="center">
         <Spinner label="Starting delugefinder" />
       </Box>
     );
@@ -395,7 +395,7 @@ export function App({
   return (
     <StoreContext.Provider value={store}>
       <TabTitle />
-      <Box flexDirection="column" paddingX={1}>
+      <Box height={rows} backgroundColor={COLOR.bg} flexDirection="column" paddingX={1}>
         <Box justifyContent="space-between">
           <Logo />
           {notice ? <Text color={COLOR.good}>{notice}</Text> : null}
