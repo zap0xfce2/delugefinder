@@ -34,7 +34,7 @@ describe("resultsPanelOuter", () => {
     }
   });
 
-  it("uses exactly one row of slack, matching Downloads/Seeding (listRows - 1)", () => {
+  it("uses exactly one row of slack (listRows - 1)", () => {
     for (let listRows = 12; listRows <= 80; listRows++) {
       expect(resultsHeight(listRows)).toBe(listRows - 1);
     }

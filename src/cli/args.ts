@@ -18,7 +18,7 @@ export function parseCliArgs(argv: string[]): CliCommand {
   return { kind: "invalid", arg: a };
 }
 
-export const HELP_TEXT = `delugefinder, terminal-native torrent search
+export const HELP_TEXT = `delugefinder, finds torrents and sends them to Deluge
 
 usage
   dlfi                      open the search TUI

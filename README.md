@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="preview/splash.svg" alt="delugefinder, curated torrents straight from your terminal" style="max-width: 832px; width: 100%; height: auto;">
+  <img src="preview/splash.svg" alt="DelugeFinder, finds torrents and sends them to Deluge" style="max-width: 832px; width: 100%; height: auto;">
 </p>
 
 Finding a torrent these days sucks. One site is a minefield of fake download buttons. Another hides the real link under a popup that spawns two more tabs. And after all that, half the results are dead, zero seeders.
 
-delugefinder is a torrent finder that lives in your terminal. One search checks a short, curated list of reputable sources at once, and whatever you pick gets sent straight to your own [Deluge](https://deluge-torrent.org) instance over its Web UI — delugefinder itself never downloads anything.
+DelugeFinder finds torrents and sends them to Deluge, right from your terminal. One search checks every indexer configured in your own [Prowlarr](https://prowlarr.com) instance at once, and whatever you pick gets sent straight to your own [Deluge](https://deluge-torrent.org) instance over its Web UI — DelugeFinder itself never downloads anything.
 
 ## Get started
 
@@ -16,32 +16,43 @@ delugefinder is a torrent finder that lives in your terminal. One search checks 
    npx dlfi
    ```
 
-delugefinder opens straight to a search bar: search for what you want, paste in a magnet link or a bare infohash, or just press Enter on an empty box to browse the curated library. Press `o` once to point it at your Deluge Web UI (address + password); it's saved locally after that. From there it's all keypresses, nothing to memorize, and `?` brings up the full list anytime.
+DelugeFinder opens straight to a search bar: search for what you want, or paste in a magnet link or a bare infohash. Press `o` once to point it at your Deluge Web UI (address + password) and `p` to point it at your Prowlarr instance (address + API key); both are saved locally after that. From there it's all keypresses, nothing to memorize, and `?` brings up the full list anytime.
 
 ## Finding something
 
 Type what you're looking for and press Enter. Results stream in from every source as they answer, tagged with size and how many people are sharing each one, so you can see what'll come down fast. Arrow to what you want and press `d` to send it to Deluge, or `y` to just copy the magnet link instead.
 
 <p align="center">
-  <img src="preview/browse.svg" alt="delugefinder's browse view: the sidebar, the search bar, and merged results from every source" style="max-width: 832px; width: 100%; height: auto;">
+  <img src="preview/browse.svg" alt="DelugeFinder's browse view: the sidebar, the search bar, and merged results from every source" style="max-width: 832px; width: 100%; height: auto;">
 </p>
 
 ## What it searches
 
-A short, hand-picked list of trusted sources:
+DelugeFinder has no built-in source list — every source is an indexer discovered live from your own [Prowlarr](https://prowlarr.com) instance. Add Prowlarr once (see below) and every indexer configured there shows up as its own source, grouped by category (Games, Movies, TV, Anime). Until Prowlarr is connected, searches simply return nothing.
 
-| Category | Sources |
-| --- | --- |
-| Games | FitGirl |
-| Movies | YTS, The Pirate Bay, 1337x |
-| TV | EZTV, The Pirate Bay, 1337x |
-| Anime | Nyaa, SubsPlease |
+## Adding a Deluge connection
 
-Games are the only category that can run code, so they come from FitGirl alone, a repacker with a long, trusted track record; everything else is plain video and subtitles. If a source is down, the search carries on without it, and delugefinder tells you which one is offline.
+Press `o` anywhere in the app to open the Deluge connection panel:
+
+1. **URL** — your Deluge Web UI address, e.g. `http://localhost:8112`.
+2. Press `Tab` (or Enter) to move to **password** — the Deluge Web UI password.
+3. Press Enter to save, or `Esc` to cancel without saving.
+
+The connection is saved locally to your config file and reused on every future start. Once it's set, `d` on any result sends its magnet link straight to that Deluge instance.
+
+## Adding a Prowlarr connection
+
+Press `p` anywhere in the app to open the Prowlarr connection panel:
+
+1. **URL** — your Prowlarr address, e.g. `http://localhost:9696`.
+2. Press `Tab` (or Enter) to move to **API key** — found in Prowlarr under Settings → General → Security.
+3. Press Enter to save, or `Esc` to cancel without saving.
+
+Once saved, DelugeFinder loads your configured indexers in the background and merges their results into every search.
 
 ## Contributing
 
-To run or work on delugefinder locally:
+To run or work on DelugeFinder locally:
 
 1. Clone the repository and open the folder.
 2. Install dependencies:
@@ -58,18 +69,6 @@ To run or work on delugefinder locally:
    npx dlfi
    ```
 
-Before opening a PR, skim [CONTRIBUTING.md](CONTRIBUTING.md); it lays out the bar with examples from real merged PRs.
-
 ## Privacy
 
-delugefinder itself never opens a connection to the torrent network — it only searches, then hands the chosen magnet link to your own Deluge instance over its Web UI. Everything after that (downloading, seeding, where files land) is Deluge's territory, configured however you already run it.
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=zap0xfce2%2Fdelugefinder&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=zap0xfce2/delugefinder&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=zap0xfce2/delugefinder&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=zap0xfce2/delugefinder&type=date&legend=top-left" />
- </picture>
-</a>
+DelugeFinder itself never opens a connection to the torrent network — it only searches, then hands the chosen magnet link to your own Deluge instance over its Web UI. Everything after that (downloading, seeding, where files land) is Deluge's territory, configured however you already run it.

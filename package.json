@@ -1,7 +1,7 @@
 {
   "name": "delugefinder",
-  "version": "1.2.0",
-  "description": "A sleek torrent finder that lives right in your terminal and sends picks straight to Deluge.",
+  "version": "1.0.0",
+  "description": "A terminal app that finds torrents and sends them to Deluge.",
   "type": "module",
   "bin": {
     "dlfi": "./dist/cli.cjs"
@@ -33,10 +33,9 @@
     "tui",
     "terminal",
     "cli",
-    "ink",
-    "fitgirl"
+    "ink"
   ],
-  "author": "bairon",
+  "author": "Zap0xfce2",
   "license": "MIT",
   "repository": {
     "type": "git",

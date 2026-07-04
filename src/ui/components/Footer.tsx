@@ -8,7 +8,11 @@ export function Footer({ hints }: { hints: Hint[] }) {
       <Text>
         {hints.map((h, i) => (
           <Text key={h.keys + h.label}>
-            {i > 0 ? <Text dimColor>{"   "}</Text> : null}
+            {i > 0 ? (
+              <Text dimColor color={COLOR.text}>
+                {"   "}
+              </Text>
+            ) : null}
             <Text color={COLOR.alt}>{h.keys}</Text>
             <Text dimColor color={COLOR.text}>{` ${h.label}`}</Text>
           </Text>

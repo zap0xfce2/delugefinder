@@ -72,7 +72,7 @@
     <rect x="617.6" y="112" width="9.6" height="22" fill="#4f3c90"/>
     <rect x="627.2" y="112" width="9.6" height="11" fill="#4e3b8d"/>
     <rect x="636.8" y="123" width="9.6" height="11" fill="#4c3a8a"/>
-    <text x="272" y="194" textLength="288" lengthAdjust="spacingAndGlyphs" xml:space="preserve" fill="#e9e4f5">Find torrents. Send to Deluge.</text>
+    <text x="233.6" y="194" textLength="364.8" lengthAdjust="spacingAndGlyphs" xml:space="preserve" fill="#e9e4f5">Find Torrents and send them to Deluge.</text>
     <text x="262.4" y="216" textLength="316.8" lengthAdjust="spacingAndGlyphs" xml:space="preserve" fill-opacity="0.55">games  ·  movies  ·  tv  ·  anime</text>
     <text x="118.4" y="260" textLength="19.2" lengthAdjust="spacingAndGlyphs" xml:space="preserve" fill="#a78bfa">╭─</text>
     <text x="147.2" y="260" textLength="57.6" lengthAdjust="spacingAndGlyphs" xml:space="preserve" fill="#a78bfa" font-weight="600">Search</text>

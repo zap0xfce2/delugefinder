@@ -16,9 +16,7 @@ export function windowStart(cursor: number, total: number, height: number): numb
  * of the panel. We intentionally subtract one extra row so the view never
  * *exactly* fills the parent `overflow: "hidden"` body box. An exact fit
  * desyncs Ink's incremental terminal renderer and makes it swallow a row while
- * scrolling — the "highlighted numbering is wrong" bug (issue #21). Downloads
- * and Seeding already leave this slack via `listRows - 1`; this keeps Results
- * consistent with them.
+ * scrolling — the "highlighted numbering is wrong" bug (issue #21).
  */
 export function resultsPanelOuter(listRows: number, searchH: number): number {
   return Math.max(5, listRows - searchH - 2);
