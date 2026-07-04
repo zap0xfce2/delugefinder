@@ -41,7 +41,7 @@ function dedupe(list: TorrentResult[]): TorrentResult[] {
   return [...byHash.values()];
 }
 
-// torlink's default ordering: healthiest first. The results view can re-sort
+// delugefinder's default ordering: healthiest first. The results view can re-sort
 // on demand (the `s` key), and its "none"/default state preserves this order.
 function defaultOrder(list: TorrentResult[]): TorrentResult[] {
   return list.sort((a, b) => {

@@ -1,10 +1,10 @@
 {
-  "name": "torlnk",
+  "name": "delugefinder",
   "version": "1.2.0",
   "description": "A sleek torrent finder that lives right in your terminal and sends picks straight to Deluge.",
   "type": "module",
   "bin": {
-    "torlnk": "./dist/cli.cjs"
+    "dlfi": "./dist/cli.cjs"
   },
   "files": [
     "dist",
@@ -40,11 +40,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/baairon/torlink.git"
+    "url": "git+https://github.com/zap0xfce2/delugefinder.git"
   },
-  "homepage": "https://github.com/baairon/torlink#readme",
+  "homepage": "https://github.com/zap0xfce2/delugefinder#readme",
   "bugs": {
-    "url": "https://github.com/baairon/torlink/issues"
+    "url": "https://github.com/zap0xfce2/delugefinder/issues"
   },
   "publishConfig": {
     "access": "public"

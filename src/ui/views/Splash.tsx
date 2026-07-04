@@ -33,11 +33,11 @@ export function Splash() {
         <Logo />
       ) : (
         <Text bold color={COLOR.accent}>
-          torlink
+          delugefinder
         </Text>
       )}
       <Box marginTop={2}>
-        <Text color={COLOR.text}>A curated, terminal-native torrent downloader.</Text>
+        <Text color={COLOR.text}>Find torrents. Send to Deluge.</Text>
       </Box>
       <Box>
         <Text dimColor>{CATEGORIES}</Text>
