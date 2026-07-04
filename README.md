@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="preview/splash.svg" alt="DelugeFinder, torrents straight from your terminal" style="max-width: 832px; width: 100%; height: auto;">
+  <img src="preview/splash.svg" alt="DelugeFinder, finds torrents and sends them to Deluge" style="max-width: 832px; width: 100%; height: auto;">
 </p>
 
 Finding a torrent these days sucks. One site is a minefield of fake download buttons. Another hides the real link under a popup that spawns two more tabs. And after all that, half the results are dead, zero seeders.
 
-DelugeFinder is a torrent finder that lives in your terminal. One search checks every indexer configured in your own [Prowlarr](https://prowlarr.com) instance at once, and whatever you pick gets sent straight to your own [Deluge](https://deluge-torrent.org) instance over its Web UI — DelugeFinder itself never downloads anything.
+DelugeFinder finds torrents and sends them to Deluge, right from your terminal. One search checks every indexer configured in your own [Prowlarr](https://prowlarr.com) instance at once, and whatever you pick gets sent straight to your own [Deluge](https://deluge-torrent.org) instance over its Web UI — DelugeFinder itself never downloads anything.
 
 ## Get started
 
